@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.mz/thymeleaf/layout"
+      layout:decorate="~{/fragments/_layout}">
+
+<head>
+	<title>Admin/Menu</title>
+</head>
+
+<body>
+	<div layout:fragment="content">
+		<nav class="navbar sticky-top flex-md-nowrap p-0 shadow">
+			<a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3" th:href="@{/}">Feliciano</a>
+			<button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-toggle="collapse" data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="oi oi-menu"></span>
+			</button>
+			<ul class="navbar-nav px-3">
+				<li class="nav-item text-nowrap">
+					<a class="nav-link" th:href="@{/logout}">Logout</a>
+				</li>
+			</ul>
+		</nav>
+
+		<div class="container-fluid">
+			<div class="row">
+				<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+					<div class="sidebar-sticky pt-3">
+						<ul class="nav flex-column">
+							<li class="nav-item">
+								<a class="nav-link active" th:href="@{/admin}">
+									<span data-feather="home"></span>
+									Home <span class="sr-only">(current)</span>
+								</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" th:href="@{/admin/order}">
+									<span data-feather="file"></span>
+									Order
+								</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" th:href="@{/admin/menu}">
+									<span data-feather="shopping-cart"></span>
+									Menu
+								</a>
+							</li>
+
+						</ul>
+					</div>
+				</nav>
+
+				<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+
+						<div class="container-fluid">
+
+							<div class="row page-titles">
+								<div class="col-md-5 align-self-center">
+									<h4 class="text-themecolor">Menu Table</h4>
+								</div>
+								<div class="col-md-7 align-self-center text-right">
+									<div class="d-flex justify-content-end align-items-center">
+										<ol class="breadcrumb">
+											<li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
+											<li class="breadcrumb-item active">Menu Table</li>
+										</ol>
+									</div>
+								</div>
+							</div>
+
+							<!-- Add menu icon & form -->
+
+							<div class="row">
+								<div class="col-md-12 align-self-center text-right">
+									<div class="d-flex justify-content-end align-items-center">
+										<p style="padding-top: 15px;padding-right:30px;">Add New Item</p><a id="add"><i
+											class="icon-plus"></i></a>
+
+									</div>
+								</div>
+							</div>
+
+							<div id="popup" style="display: none;">
+								<div class="content">
+									<form class="login100-form" th:action="@{/admin/menu/add}" th:object="${item}" method="post"
+									      enctype="utf8">
+										<fieldset>
+											<label class="label-input100" for="title">Title</label>
+											<input type="text" class="input100" name="title" id="title" placeholder="title"
+											       th:field="*{title}" required>
+											<label class="label-input100" for="menu_type">Item Type</label>
+											<select class="custom-select" name="menu_type" id="menu_type" th:field="*{menuType}"
+											        required>
+												<option value="" hidden>select type</option>
+												<option class="select-items" value="BREAKFAST">Breakfast</option>
+												<option class="select-items" value="LUNCH">Lunch</option>
+												<option class="select-items" value="DINNER">Dinner</option>
+												<option class="select-items" value="DESSERT">Dessert</option>
+												<option class="select-items" value="DRINKS">Drinks</option>
+											</select>
+											<!--   <input type="text" class="input100" name="menu_type" id="menu_type" placeholder="menu_type" th:field="*{menuType}"> -->
+											<label class="label-input100" for="description">Description</label>
+											<input type="text" class="input100" name="description" id="description"
+											       placeholder="description" th:field="*{description}" required>
+											<label class="label-input100" for="image_url">Image Url</label>
+											<input type="text" class="input100" name="image_url" id="image_url"
+											       placeholder="image_url" th:field="*{imageUrl}" required>
+											<label class="label-input100" for="price">Price</label>
+											<input type="number" class="input100" name="price" id="price" placeholder="price"
+											       th:field="*{price}" min="1" required>
+											<div class="container-login100-form-btn">
+												<div class="wrap-login100-form-btn">
+													<div class="login100-form-bgbtn"></div>
+													<button type="submit" class="login100-form-btn" id="create">Add item</button>
+												</div>
+												<div class="wrap-login100-form-btn">
+													<div class="login100-form-bgbtn"></div>
+													<button type="button" class="login100-form-btn" id="cancel">Cancel</button>
+												</div>
+											</div>
+
+
+										</fieldset>
+									</form>
+
+
+
+								</div>
+							</div>
+
+							<!-- End menu icon & form -->
+
+							<!-- Start breakfast table -->
+
+							<div class="row">
+								<!-- column -->
+								<div class="col-12">
+									<div class="card">
+										<div class="card-body">
+											<h4 class="card-title">Breakfast Table</h4>
+											<div class="table-responsive">
+												<table class="table">
+													<thead>
+													<tr>
+														<th>Title</th>
+														<th>Description</th>
+														<th>Price</th>
+														<th></th>
+													</tr>
+													</thead>
+													<tbody th:each="breakfast : ${breakfasts}">
+													<tr>
+														<td th:text="${breakfast.title}"></td>
+														<td th:text="${breakfast.description}"></td>
+														<td th:text="${breakfast.price}"></td>
+														<td><a th:href="@{'/admin/menu/delete/'+${breakfast.id}}"><i
+																class="icon-trash-o"></i></a> </td>
+													</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- End breakfast table-->
+
+							<!-- Start Lunch table -->
+
+							<div class="row">
+								<!-- column -->
+								<div class="col-12">
+									<div class="card">
+										<div class="card-body">
+											<h4 class="card-title">Lunch Table</h4>
+											<div class="table-responsive">
+												<table class="table">
+													<thead>
+													<tr>
+														<th>Title</th>
+														<th>Description</th>
+														<th>Price</th>
+														<th></th>
+													</tr>
+													</thead>
+													<tbody th:each="lunch : ${lunches}">
+													<tr>
+														<td th:text="${lunch.title}"></td>
+														<td th:text="${lunch.description}"></td>
+														<td th:text="${lunch.price}"></td>
+														<td><a th:href="@{'/admin/menu/delete/'+${lunch.id}}"><i
+																class="icon-trash-o"></i></a> </td>
+													</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- End lunch table-->
+
+							<!-- Start dinner table -->
+
+							<div class="row">
+								<!-- column -->
+								<div class="col-12">
+									<div class="card">
+										<div class="card-body">
+											<h4 class="card-title">Dinner Table</h4>
+											<div class="table-responsive">
+												<table class="table">
+													<thead>
+													<tr>
+														<th>Title</th>
+														<th>Description</th>
+														<th>Price</th>
+														<th></th>
+													</tr>
+													</thead>
+													<tbody th:each="dinner : ${dinners}">
+													<tr>
+														<td th:text="${dinner.title}"></td>
+														<td th:text="${dinner.description}"></td>
+														<td th:text="${dinner.price}"></td>
+														<td><a th:href="@{'/admin/menu/delete/'+${dinner.id}}"><i
+																class="icon-trash-o"></i></a> </td>
+													</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- End dinner table-->
+
+							<!-- Start drinks table -->
+
+							<div class="row">
+								<!-- column -->
+								<div class="col-12">
+									<div class="card">
+										<div class="card-body">
+											<h4 class="card-title">Drinks Table</h4>
+											<div class="table-responsive">
+												<table class="table">
+													<thead>
+													<tr>
+														<th>Title</th>
+														<th>Description</th>
+														<th>Price</th>
+														<th></th>
+													</tr>
+													</thead>
+													<tbody th:each="drink : ${drinks}">
+													<tr>
+														<td th:text="${drink.title}"></td>
+														<td th:text="${drink.description}"></td>
+														<td th:text="${drink.price}"></td>
+														<td><a th:href="@{'/admin/menu/delete/'+${drink.id}}"><i
+																class="icon-trash-o"></i></a> </td>
+													</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- End drinks table-->
+
+							<!-- Start dessert table -->
+
+							<div class="row">
+								<!-- column -->
+								<div class="col-12">
+									<div class="card">
+										<div class="card-body">
+											<h4 class="card-title">Dessert Table</h4>
+											<div class="table-responsive">
+												<table class="table">
+													<thead>
+													<tr>
+														<th>Title</th>
+														<th>Description</th>
+														<th>Price</th>
+														<th></th>
+													</tr>
+													</thead>
+													<tbody th:each="dessert : ${desserts}">
+													<tr>
+														<td th:text="${dessert.title}"></td>
+														<td th:text="${dessert.description}"></td>
+														<td th:text="${dessert.price}"></td>
+														<td><a th:href="@{'/admin/menu/delete/'+${dessert.id}}"><i
+																class="icon-trash-o"></i></a> </td>
+													</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<!-- End dessert table-->
+
+						</div>
+				</main>
+			</div>
+		</div>
+
+		<div th:replace="/fragments/admin-footer :: admin-footer"></div>
+	</div>
+</body>
+
+</html>

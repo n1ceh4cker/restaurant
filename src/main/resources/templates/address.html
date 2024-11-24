@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.mz/thymeleaf/layout"
+	layout:decorate="~{fragments/_layout}">
+
+<head>
+	<title>Address</title>
+</head>
+
+<body>
+	<div layout:fragment="content">
+		<div th:replace="fragments/header :: header"></div>
+
+		<div th:replace="fragments/hero :: hero(~{::title/text()}, ~{::title/text()})"></div>
+
+		<div id="popup" style="display: none;">
+			<div class="content">
+				<form class="login100-form" th:action="@{/address/add}" th:object="${address}" method="post"
+				      enctype="utf8">
+					<fieldset>
+						<label class="label-input100" for="address_type">Address Type</label>
+						<select class="custom-select" name="address_type" id="address_type" th:field="*{addressType}"
+						        required>
+							<option value="" hidden>select type</option>
+							<option class="select-items" value="HOME">Home</option>
+							<option class="select-items" value="WORK">Work</option>
+							<option class="select-items" value="OTHER">Other</option>
+						</select>
+						<label class="label-input100" for="flat_number">Flat Number</label>
+						<input type="text" class="input100" name="flat_number" id="flat_number"
+						       placeholder="flat_number" th:field="*{flatNumber}" required>
+						<label class="label-input100" for="landmark">Landmark</label>
+						<input type="text" class="input100" name="landmark" id="landmark" placeholder="landmark"
+						       th:field="*{landmark}" required>
+						<label class="label-input100" for="city">City</label>
+						<input type="text" class="input100" name="city" id="city" placeholder="city" th:field="*{city}"
+						       required>
+						<label class="label-input100" for="pin">Pin</label>
+						<input type="number" class="input100" name="pin" id="pin" placeholder="pin" th:field="*{pin}"
+						       min="100000" max="999999" required>
+						<div class="container-login100-form-btn">
+							<div class="wrap-login100-form-btn">
+								<div class="login100-form-bgbtn"></div>
+								<button type="submit" class="login100-form-btn" id="create">Add address</button>
+							</div>
+							<div class="wrap-login100-form-btn">
+								<div class="login100-form-bgbtn"></div>
+								<button type="button" class="login100-form-btn" id="cancel">Cancel</button>
+							</div>
+						</div>
+					</fieldset>
+				</form>
+			</div>
+		</div>
+
+		<section class="ftco-section bg-light">
+			<div class="container">
+				<div class="row">
+					<div class="col-12">
+						<div class="card">
+							<div class="card-body">
+								<h4 class="card-title">Address</h4>
+								<div class="row">
+									<div class="col-md-12 align-self-center text-right">
+										<div class="d-flex justify-content-end align-items-center">
+											<p style="padding-top: 15px;padding-right:30px;">Add New Address</p><a
+												id="add"><i class="icon-plus"></i></a>
+
+										</div>
+									</div>
+								</div>
+								<div th:if="${!addresses.isEmpty()}">
+									<div class="table-responsive">
+										<table class="table">
+											<thead>
+												<tr>
+													<th>Address Type</th>
+													<th>Flat Number</th>
+													<th>Landmark</th>
+													<th>City</th>
+													<th>Pin</th>
+													<th></th>
+													<th></th>
+													<th></th>
+												</tr>
+											</thead>
+											<tbody th:each="address : ${addresses}">
+												<tr>
+													<td>[[${address.addressType}]]</td>
+													<td>[[${address.flatNumber}]]</td>
+													<td>[[${address.landmark}]]</td>
+													<td>[[${address.city}]]</td>
+													<td>[[${address.pin}]]</td>
+													<td><a th:href="@{'/address/delete?addressId='+${address.id}}"><i
+																class="icon-trash-o"></i></a> </td>
+													<td th:if="${address.selected}"><i class="icon-check-square-o"></i>
+													</td>
+													<td th:unless="${address.selected}"><a
+															th:href="@{'/address/select?addressId='+${address.id}}"><i
+																class="icon-square-o"></i></a> </td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<div th:unless="${!addresses.isEmpty()}">
+									<span>No address here</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<div th:replace="fragments/footer :: footer"></div>
+	</div>
+</body>
+
+</html>

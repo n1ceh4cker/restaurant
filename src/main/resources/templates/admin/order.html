@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.mz/thymeleaf/layout"
+      layout:decorate="~{/fragments/_layout}">
+
+<head>
+	<title>Admin/Order</title>
+</head>
+
+<body>
+	<div layout:fragment="content">
+		<nav class="navbar sticky-top flex-md-nowrap p-0 shadow">
+			<a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3" th:href="@{/}">Feliciano</a>
+			<button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-toggle="collapse" data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="oi oi-menu"></span>
+			</button>
+			<ul class="navbar-nav px-3">
+				<li class="nav-item text-nowrap">
+					<a class="nav-link" th:href="@{/logout}">Logout</a>
+				</li>
+			</ul>
+		</nav>
+
+		<div class="container-fluid">
+			<div class="row">
+				<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+					<div class="sidebar-sticky pt-3">
+						<ul class="nav flex-column">
+							<li class="nav-item">
+								<a class="nav-link active" th:href="@{/admin}">
+									<span data-feather="home"></span>
+									Home <span class="sr-only">(current)</span>
+								</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" th:href="@{/admin/order}">
+									<span data-feather="file"></span>
+									Order
+								</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" th:href="@{/admin/menu}">
+									<span data-feather="shopping-cart"></span>
+									Menu
+								</a>
+							</li>
+						</ul>
+					</div>
+				</nav>
+
+				<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+					<div class="container-fluid">
+						<div class="row page-titles">
+							<div class="col-md-5 align-self-center">
+								<h4 class="text-themecolor">Order Table</h4>
+							</div>
+							<div class="col-md-7 align-self-center text-right">
+								<div class="d-flex justify-content-end align-items-center">
+									<ol class="breadcrumb">
+										<li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
+										<li class="breadcrumb-item active">Order Table</li>
+									</ol>
+								</div>
+							</div>
+						</div>
+
+						<!-- active order -->
+						<div th:if="${order !=null}">
+							<div class="col-12 mb-3">
+								<div class="card">
+									<div class="card-body">
+										<h4 class="card-title" style="margin-bottom : 25px;">Order Details</h4>
+										<a th:href="@{/admin/order}"><i class="icon-angle-down"></i></a>
+										<div class="table-responsive">
+											<table class="table">
+												<thead>
+												<tr>
+													<th>Title</th>
+													<th>Description</th>
+													<th>Quantity</th>
+													<th>Price</th>
+												</tr>
+												</thead>
+												<tbody th:each="item : ${order.items}">
+												<tr>
+													<td th:text="${item.menuItem.title}"></td>
+													<td th:text="${item.menuItem.description}"></td>
+													<td th:text="${item.quantity}"></td>
+													<td th:text="${item.menuItem.price*item.quantity}"></td>
+												</tr>
+												</tbody>
+											</table>
+										</div>
+									</div>
+									<div class="card-body">
+										<h4 class="card-title">Bill</h4>
+										<div class="table-responsive">
+											<table class="table" th:object="${order}">
+
+												<tr>
+													<td></td>
+													<td></td>
+													<td>Item total</td>
+													<td>[[${order.itemTotal}]]</td>
+													<td></td>
+												</tr>
+												<tr>
+													<td></td>
+													<td></td>
+													<td>Service Tax</td>
+													<td>[[${#numbers.formatDecimal(order.itemTotal*0.12, 1, 2)}]]</td>
+													<td></td>
+												</tr>
+												<tr>
+													<td></td>
+													<td></td>
+													<td>Delivery Charge</td>
+													<td>20</td>
+													<td></td>
+												</tr>
+												<tr>
+													<td></td>
+													<td></td>
+													<td>Bill total</td>
+													<td>[[${#numbers.formatDecimal(order.itemTotal*1.12+20, 1, 2)}]]</td>
+													<td></td>
+												</tr>
+											</table>
+										</div>
+										<div th:if="${order.delivered}">
+											<span th:text="'Delivered At:' + ${order.deliverDate}"></span>
+										</div>
+										<div th:unless="${order.delivered}">
+											<span>Mark as delivered</span>
+											<a th:href="@{'/admin/order/deliver/' + ${order.id}}"><i
+													class="icon-square-o"></i></a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<!-- past order -->
+
+						<h4 style="padding-left:25px;" th:if="order == null">Orders</h4>
+						<div th:if="${!orders.isEmpty() && order == null}">
+							<div th:each="order: ${orders}">
+								<div class="col-12">
+									<div class="card" style="margin-bottom: 10px;">
+										<div class="card-body">
+											<div th:each="item : ${order.items}">
+												<span th:text="${item.menuItem.title} + '(' +${item.quantity} + ')  '"></span>
+											</div>
+											<hr />
+											<div>
+												<span th:text="${#numbers.formatDecimal(order.bill, 1, 2)} + ' Rs '"></span>
+												<span th:text="${#dates.monthName(order.orderDate) + ' ' + #dates.day(order.orderDate) + ' ' + #dates.hour(order.orderDate) + ':' + #dates.minute(order.orderDate)}"></span>
+												<span><a th:href="@{'/admin/order/details/' + ${order.id}}"><i class="icon-angle-right"></i></a></span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div th:unless="${!orders.isEmpty()}">No Past Orders</div>
+					</div>
+				</main>
+			</div>
+		</div>
+
+		<div th:replace="/fragments/admin-footer :: admin-footer"></div>
+	</div>
+</body>
+
+</html>

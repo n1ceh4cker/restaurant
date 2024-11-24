@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.mz/thymeleaf/layout"
+	layout:decorate="~{fragments/_layout}">
+
+<head>
+	<title>Order</title>
+</head>
+
+<body>
+	<div layout:fragment="content">
+		<div th:replace="fragments/header :: header"></div>
+
+		<div th:replace="fragments/hero :: hero(~{::title/text()}, ~{::title/text()})"></div>
+
+		<section class="ftco-section bg-light">
+			<div class="container">
+				<!-- past order -->
+				<h4 style="padding-left:25px;">Past Orders</h4>
+				<div style="padding-left:10px;" th:unless="${!orders.isEmpty()}">No Past Orders</div>
+				<div th:if="${!orders.isEmpty()}" id="accordion">
+					<div th:each="order: ${orders}" class="card">
+						<div class="card-header" th:id="${order.id+'h'}">
+							<h5 class="mb-0">
+								<button class="btn" data-toggle="collapse" th:data-target="${'#'+order.id}"
+									aria-expanded="true" th:aria-controls="${order.id}">
+									<span th:each="item : ${order.items}">[[${item.menuItem.title + '(' + item.quantity
+										+ ') '}]]</span>
+									<span>[[${#numbers.formatDecimal(order.itemTotal*1.12+20, 1, 2)} + ' Rs']]</span>
+									<span>[[${#dates.monthName(order.orderDate) + ' ' + #dates.day(order.orderDate) + ' ' + #dates.hour(order.orderDate) + ':' + #dates.minute(order.orderDate)}]]</span>
+								</button>
+							</h5>
+						</div>
+
+						<div th:id="${order.id}" class="collapse show" th:aria-labelledby="${order.id+'h'}"
+							data-parent="#accordion">
+							<div class="card-body">
+								<h4 class="card-title">Bill</h4>
+								<div class="table-responsive">
+									<table class="table" th:object="${order}">
+
+										<tr>
+											<td></td>
+											<td></td>
+											<td>Item total</td>
+											<td>[[${order.itemTotal}]]</td>
+											<td></td>
+										</tr>
+										<tr>
+											<td></td>
+											<td></td>
+											<td>Service Tax</td>
+											<td>[[${#numbers.formatDecimal(order.itemTotal*0.12, 1, 2)}]]</td>
+											<td></td>
+										</tr>
+										<tr>
+											<td></td>
+											<td></td>
+											<td>Delivery Charge</td>
+											<td>20</td>
+											<td></td>
+										</tr>
+										<tr>
+											<td></td>
+											<td></td>
+											<td>Bill total</td>
+											<td>[[${#numbers.formatDecimal(order.itemTotal*1.12+20, 1, 2)}]]</td>
+											<td></td>
+										</tr>
+									</table>
+								</div>
+								<div th:if="${order.delivered}">
+									<span th:text="'Delivered At: ' + ${#dates.monthName(order.orderDate) + ' ' + #dates.day(order.orderDate) + ' ' + #dates.hour(order.orderDate) + ':' + #dates.minute(order.orderDate)}"></span>
+								</div>
+								<div th:unless="${order.delivered}">
+									<span>Will be delivered soon!!!</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<div th:replace="fragments/footer :: footer"></div>
+	</div>
+</body>
+
+</html>

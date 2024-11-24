@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymelesaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Invalid Token</title>
+	<link rel="stylesheet" href="/css/icomoon.css">
+	<link rel="stylesheet" href="/css/auth.css">
+</head>
+
+<body>
+	<div class="container flex">
+
+			<h2 th:text="${message}">There was some error</h2><br>
+
+				<a th:if="${expired}" class="btn" th:href="@{'/resendToken?token=' + ${token}}">Resend</a>
+
+				<a th:if="${!expired}" class="btn" th:href="@{'/signup'}">Signup</a>
+
+	</div>
+</body>
+
+</html>

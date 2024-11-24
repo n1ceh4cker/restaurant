@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.mz/thymeleaf/layout"
+	layout:decorate="~{fragments/_layout}">
+
+<head>
+	<title>Error</title>
+</head>
+
+<body>
+	<div layout:fragment="content">
+		<h1>404</h1>
+		<p th:text="${errorMessage}">Error</p>
+		<a th:href="@{/index}">Back to home page</a>
+	</div>
+</body>
+
+</html>

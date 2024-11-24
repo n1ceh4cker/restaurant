@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.mz/thymeleaf/layout"
+	layout:decorate="~{fragments/_layout}">
+
+<head>
+	<title>Cart</title>
+</head>
+
+<body>
+	<div layout:fragment="content">
+		<div th:replace="fragments/header :: header"></div>
+
+		<div th:replace="fragments/hero :: hero(~{::title/text()}, ~{::title/text()})"></div>
+
+		<section class="ftco-section bg-light">
+			<div class="container">
+				<div class="row">
+					<div class="col-12">
+						<div class="card">
+							<div class="card-body">
+								<h4 class="card-title">Cart</h4>
+								<div th:if="${order != null && !order.items.isEmpty()}">
+									<div class="table-responsive">
+										<table class="table">
+											<thead>
+												<tr>
+													<th>Title</th>
+													<th>Description</th>
+													<th>Quantity</th>
+													<th>Price</th>
+													<th></th>
+												</tr>
+											</thead>
+											<tbody th:each="item : ${order.items}">
+												<tr>
+													<td th:text="${item.menuItem.title}"></td>
+													<td th:text="${item.menuItem.description}"></td>
+													<td>
+														<a th:href="@{'/cart/remove?menuId='+${item.menuItem.id}}"><i class="icon-minus"></i></a>
+														<span style="padding-right:3px;padding-left:3px;" th:text="${item.quantity}"></span>
+														<a th:href="@{'/cart/add?menuId='+${item.menuItem.id}}"><i class="icon-plus"></i></a>
+													</td>
+													<td th:text="${item.menuItem.price*item.quantity}"></td>
+													<td>
+														<a th:href="@{'/cart/delete?menuId='+${item.menuItem.id}}"><i class="icon-trash"></i></a>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+									<h4 class="card-title">Bill</h4>
+									<div class="table-responsive">
+										<table class="table" th:object="${order}">
+											<tr>
+												<td></td>
+												<td>Item total</td>
+												<td>[[${order.itemTotal}]]</td>
+												<td></td>
+											</tr>
+											<tr>
+												<td></td>
+												<td>Service Tax</td>
+												<td>[[${#numbers.formatDecimal(order.itemTotal*0.12, 1, 2)}]]</td>
+												<td></td>
+											</tr>
+											<tr>
+												<td></td>
+												<td>Delivery Charge</td>
+												<td>20</td>
+												<td></td>
+											</tr>
+											<tr>
+												<td></td>
+												<td>Bill total</td>
+												<td>[[${#numbers.formatDecimal(order.itemTotal*1.12+20, 1, 2)}]]</td>
+												<td></td>
+											</tr>
+										</table>
+									</div>
+
+									<div class="row">
+										<div class="col-md-12 align-self-center text-right">
+											<div class="d-flex justify-content-start align-items-center">
+												<h4 class="card-title">Delivery Address</h4>
+											</div>
+											<div class="d-flex justify-content-end align-items-center">
+												<span>Change</span>
+												<a th:href="@{/address/get}"><i class="icon-edit"></i></a>
+											</div>
+										</div>
+									</div>
+									<div th:object="${address}">
+										<span>Deliver to</span>
+										<div th:if="${address != null}">
+											<span>[[*{addressType} + ':']]</span>
+											<span>
+												[[*{flatNumber} + ' ' + *{landmark} + ' ' + *{city} + ' ' + *{pin}]]
+											</span>
+										</div>
+										<div th:unless="${address != null}">
+											<p>No Address added</p>
+										</div>
+									</div>
+									<div th:if="${address != null}">
+										<a class="btn btn-block btn-primary" th:href="@{/order/confirm}">Confirm Order</a>
+									</div>
+									<div th:unless="${address != null}">
+										<a class="btn btn-block btn-primary" href="#">Confirm Order</a>
+									</div>
+								</div>
+								<div th:unless="${order != null && !order.items.isEmpty()}" class="font-weight-bold">No items in cart</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<div th:replace="fragments/footer :: footer"></div>
+	</div>
+</body>
+
+</html>

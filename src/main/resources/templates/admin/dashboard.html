@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.mz/thymeleaf/layout"
+      layout:decorate="~{/fragments/_layout}">
+
+<head>
+	<title>Admin/Dashboard</title>
+</head>
+
+<body>
+<div layout:fragment="content">
+	<nav class="navbar sticky-top flex-md-nowrap p-0 shadow">
+		<a class="navbar-brand col-md-3 col-lg-2 mr-0 px-3" th:href="@{/}">Feliciano</a>
+		<button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-toggle="collapse" data-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="oi oi-menu"></span>
+		</button>
+		<ul class="navbar-nav px-3">
+			<li class="nav-item text-nowrap">
+				<a class="nav-link" th:href="@{/logout}">Logout</a>
+			</li>
+		</ul>
+	</nav>
+
+	<div class="container-fluid">
+		<div class="row">
+			<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+				<div class="sidebar-sticky pt-3">
+					<ul class="nav flex-column">
+						<li class="nav-item">
+							<a class="nav-link active" th:href="@{/admin}">
+								<span data-feather="home"></span>
+								Home <span class="sr-only">(current)</span>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" th:href="@{/admin/order}">
+								<span data-feather="file"></span>
+								Order
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" th:href="@{/admin/menu}">
+								<span data-feather="shopping-cart"></span>
+								Menu
+							</a>
+						</li>
+
+					</ul>
+				</div>
+			</nav>
+
+			<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+				<div class="container-fluid">
+					<div class="row page-titles">
+						<div class="col-md-5 align-self-center">
+							<h4 class="text-themecolor">Dashboard</h4>
+						</div>
+						<div class="col-md-7 align-self-center text-right">
+							<div class="d-flex justify-content-end align-items-center">
+								<ol class="breadcrumb">
+									<li class="breadcrumb-item active"><a href="javascript:void(0)">Home</a></li>
+								</ol>
+							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<h1>TODO: Create a dashboard</h1>
+					</div>
+				</div>
+			</main>
+		</div>
+	</div>
+
+	<div th:replace="/fragments/admin-footer :: admin-footer"></div>
+</div>
+</body>
+
+</html>
